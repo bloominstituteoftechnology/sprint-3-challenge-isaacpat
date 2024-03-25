@@ -58,8 +58,59 @@
       // 🧠 Implement a `getAllReversed` method which returns the ints in reverse order
       // ❗ WARNING: except for `getAllReversed`, methods must respect the order of the integers
       // ❗ WARNING: note that none of the methods actually mutate the `ints` property
+      constructor(...args){
+        this.ints=args;
+      }
+      getAll(){
+        return this.ints;
+      }
+      getEvens(){
+        return this.ints.filter(num=>num%2===0);
+      }
+      getNegatives(){
+        return this.ints.filter(num=>num<0);
+      }
+      getAllSquared(){
+        return this.ints.map(num=>num*num);
+      }
+      pop(){
+        if(this.ints.length===0)
+        return undefined;
+        return this.ints.pop();
+      }
+      push(num){
+        this.ints.push(num);
+        return this.ints;
+      }
+      getEveryNth(n){
+       const result=[];
+       for(let i=0;i<this.ints.length;i+=n){
+        result.push(this.ints[i]);
+       }
+       return [result]
+      }
+      getAllReversed(){
+        return this.ints.slice().reverse();
+      }
+      getEveryNth(n){
+        const result=[];
+        let counter=0
+        for(let i=0;i<this.ints.length;i++){
+          if(counter===0){
+            result.push(this.ints[i])
+          }
+            counter++;
+            if(counter===n){
+              counter=0
+            }
+          }
+          return result
+        }
+       
+      }
+     
 
-    }
+    
 
     // 👉 CHALLENGE 2 NerfGun
     class NerfGun {
@@ -76,6 +127,33 @@
       //      * When engaging the safety, return "Safety enabled!"
       //      * When disengaging the safety, return "Safety disabled!"
       // 🌟 HINT: instances need to keep track of their maximum capacity as well as their current capacity
+      constructor(totalProjectiles){
+        this.capacity=totalProjectiles;
+        this.projectilesLeft=totalProjectiles;
+        this.safetyOn=true;
+      }
+      shoot(){
+        if(this.projectilesLeft>0&& !this.safetyOn){
+          this.projectilesLeft--;
+          return "Bang!"
+        }else{
+          return "Click!"
+        }
+      }
+      reload(number){
+        if(typeof number !=="number"||number<=0){
+          return "Error reloading!"
+        }
+        this.projectilesLeft+=number;
+        if(this.projectilesLeft>this.capacity){
+          this.projectilesLeft=this.capacity;
+        }
+        return `${this.projectilesLeft} projectiles left!`
+      }
+      toggleSafety(){
+        this.safetyOn=!this.safetyOn;
+        return this.safetyOn?"Safety enabled!":"Safety disabled!"
+      }
 
     }
 
@@ -95,11 +173,29 @@
       //    ebook.next() // returns null
       // 🌟 HINT: remember about the `slice` method which strings and arrays have
       // ❗ Feel free to implement `back`, although this is not required nor graded
+      constructor(bookText,charactersPerPage){
+        this.bookText=bookText;
+        this.charactersPerPage=charactersPerPage;
+        this.currentPage=0
+      }
+      next(){
+        const nextPageStart=this.currentPage*this.charactersPerPage;
+        const nextPageEnd=nextPageStart+this.charactersPerPage;
+        const nextPage= this.bookText.slice(nextPageStart,nextPageEnd);
+        if(nextPage.length===0){
+          return null;
+        }else{
+          this.currentPage++;
+          return nextPage
+        }
+      }
 
     }
-
+     
     // 👉 CHALLENGE 4 AntFarm
+
     class AntFarm {
+      
       // 🧠 Constructor takes **any** number of arguments, which are strings: the names of your ants
       // 🧠 Instances of AntFarm have an `ants` property holding an array of ants:
       //      * Each ant is an object with a `name` prop and a `health` prop that starts at 100
@@ -130,8 +226,41 @@
       //      console.log(list) // prints ["a"]
       // 👉 HINT: if you are not feeling confident with map and filter, solve the problem with for loops,
       //      and with the piece of mind of all tests passing, refactor to use map/filter
+      constructor(...antNames){
+        this.ants=antNames.map((name)=>({name,health:100}));
+      }
+      work(){
+      if(this.ants.length===0){
+        return "No ants here. Did you work them to death?"
+      }
+      this.ants.forEach((ant)=>{
+        ant.health-=20
+      });
+      this.ants=this.ants.filter((ant)=>ant.health>0);
+      const numAntsWorking=this.ants.length;
+      if(numAntsWorking===0){
+        return "No ants here. Did you work them to death?"
+      }else{
+        const antsPlural=numAntsWorking===1?'':'s';
+        return `${numAntsWorking} ant${antsPlural} starting work!`
+      }
 
+      return [`${this.ants.length} ants starting work!`]
+      }
+      feed(antName){
+        const antsToFeed=this.ants.filter((ant)=>ant.name === antName);
+        if(antsToFeed.length === 0){
+          return `${antName} not found!`
+        }
+        antsToFeed.forEach((ant)=>{
+          ant.health+=15;
+        });
+        return 'Yum!'
+      }
+     
     }
+
+
 
     // 🧪 TESTS, do not make any changes below this line ===================
     // 🧪 TESTS, do not make any changes below this line ===================
